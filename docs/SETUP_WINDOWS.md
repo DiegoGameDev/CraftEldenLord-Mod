@@ -100,6 +100,21 @@ $env:MEB_LOG_DIRECTORY = 'D:\Elden Ring Mod Project IA\runtime-logs'
 Launchers ja abertos podem nao herdar essas variaveis. O padrao ao lado da DLL
 evita essa dependencia. Log padrao: `Game\mods\MinecraftEldenBridge.log`;
 fallback: `%TEMP%\MinecraftEldenBridge\MinecraftEldenBridge.log`.
-A DLL so le na inicializacao e permanece carregada ate encerrar o processo.
-Reinicie para reler ou trocar o binario. Nenhum arquivo foi copiado para o jogo
-durante a preparacao deste milestone.
+A DLL permanece carregada ate encerrar o processo. Sem `MEB_SELECTION_POLL_MS`,
+le uma vez; o launcher do projeto define 333 ms para acompanhar mudancas.
+Reinicie para trocar o binario. Nenhum arquivo foi copiado para o jogo durante
+a preparacao desta etapa.
+
+## Mod Fabric
+
+Use `tools/build_fabric.ps1` e `tools/install_fabric_mod.ps1`.
+O JDK 25 extraido nas dependencias e Linux ARM64; para compilar no Windows o
+script usa `C:\Program Files\Java\jdk-26.0.2.1`, gerando bytecode Java 25.
+Outro JDK Windows 25+ pode ser informado com `-JavaHome`.
+Detalhes: [MINECRAFT_FABRIC_MVP](MINECRAFT_FABRIC_MVP.md).
+
+Se PowerShell bloquear scripts locais, examine `Get-ExecutionPolicy -List`.
+Uma sessao pode usar `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned`;
+isso termina ao fechar PowerShell. O `.bat` ja passa `-ExecutionPolicy RemoteSigned`
+ao seu processo PowerShell para executar estes scripts locais. Nao modifica
+CurrentUser ou LocalMachine. Politicas impostas por administrador prevalecem.

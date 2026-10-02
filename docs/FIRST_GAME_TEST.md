@@ -6,6 +6,12 @@ Nao e preciso instalar EldenModLoader ou copiar a DLL para Game/mods neste fluxo
 O perfil nao carrega assets extras e mantem ScyllaHide desabilitado.
 Arquivos e mods que ja estejam instalados no jogo nao sao removidos pelo perfil.
 
+Atalho: abra `launch_elden_bridge.bat` na raiz do projeto. Ele chama o mesmo
+script abaixo, que configura `MEB_SELECTION_JSON`, `MEB_LOG_DIRECTORY` e
+`MEB_SELECTION_POLL_MS` somente no processo de lancamento. Nao exige digitar
+essas variaveis manualmente. O `.bat` usa `RemoteSigned` apenas no processo
+PowerShell iniciado; nao modifica a politica persistente de scripts.
+
 1. Deixe a Steam aberta e feche qualquer instancia do Elden Ring.
 2. Abra PowerShell na raiz do projeto e execute:
 
@@ -75,4 +81,5 @@ continua usando o config_eldenring.toml original, que tem external_dlls vazio.
 Referencias: README.txt distribuido com Mod Engine 2 e
 https://github.com/soulsmods/ModEngine2/blob/main/launcher/launcher.cpp
 
-Preparacao verificada com -CheckOnly. Teste dentro do jogo ainda pendente.
+O usuario confirmou o carregamento e a leitura de mudancas no jogo no milestone 1.
+Para dados reais do Minecraft, veja [MINECRAFT_FABRIC_MVP](MINECRAFT_FABRIC_MVP.md).

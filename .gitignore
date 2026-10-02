@@ -3,3 +3,7 @@ elden-ring-hooker/build*/
 .vs/
 runtime-logs/
 runtime-state/
+minecraft-fabric-raycast/.gradle/
+minecraft-fabric-raycast/build/
+minecraft-fabric-raycast/run/
+.gradle-user-home/

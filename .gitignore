@@ -1,0 +1,5 @@
+elden-ring-hooker/build*/
+*.log
+.vs/
+runtime-logs/
+runtime-state/

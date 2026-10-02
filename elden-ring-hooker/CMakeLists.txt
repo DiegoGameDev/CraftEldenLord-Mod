@@ -1,0 +1,42 @@
+cmake_minimum_required(VERSION 3.20)
+project(MinecraftEldenBridge VERSION 0.1.0 LANGUAGES CXX)
+
+if(NOT WIN32 OR NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message(FATAL_ERROR "MinecraftEldenBridge requires Windows x64.")
+endif()
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    add_compile_options(/W4 /permissive- /utf-8 /EHsc)
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+add_compile_definitions(WIN32_LEAN_AND_MEAN NOMINMAX UNICODE _UNICODE)
+
+file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/third_party/nlohmann/json.hpp" json_hash)
+if(NOT json_hash STREQUAL "9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6")
+    message(FATAL_ERROR "Unexpected nlohmann/json header. See third_party/README.md.")
+endif()
+add_library(bridge_core STATIC src/logger.cpp src/selection_reader.cpp)
+target_include_directories(bridge_core PUBLIC src)
+target_include_directories(bridge_core SYSTEM PRIVATE third_party)
+add_library(MinecraftEldenBridge SHARED src/dllmain.cpp)
+target_link_libraries(MinecraftEldenBridge PRIVATE bridge_core)
+set_target_properties(MinecraftEldenBridge PROPERTIES PREFIX "")
+
+include(CTest)
+if(BUILD_TESTING)
+    add_executable(bridge_core_tests tests/core_tests.cpp)
+    target_link_libraries(bridge_core_tests PRIVATE bridge_core)
+    add_test(NAME bridge_core COMMAND bridge_core_tests "${CMAKE_CURRENT_BINARY_DIR}/test-output/core")
+    add_executable(bridge_smoke tests/smoke_host.cpp)
+    add_test(NAME dll_selection COMMAND bridge_smoke "$<TARGET_FILE:MinecraftEldenBridge>"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../shared-formats/example_selection.json"
+        "${CMAKE_CURRENT_BINARY_DIR}/test-output/valid" 0)
+    add_test(NAME dll_missing_selection COMMAND bridge_smoke "$<TARGET_FILE:MinecraftEldenBridge>"
+        "${CMAKE_CURRENT_BINARY_DIR}/test-output/missing.json"
+        "${CMAKE_CURRENT_BINARY_DIR}/test-output/missing" 1)
+    set_tests_properties(bridge_core dll_selection dll_missing_selection PROPERTIES TIMEOUT 20)
+endif()

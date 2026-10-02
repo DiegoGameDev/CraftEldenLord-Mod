@@ -1,0 +1,11 @@
+[modengine]
+debug = false
+external_dlls = [ 'D:\Elden Ring Mod Project IA\elden-ring-hooker\build\Release\MinecraftEldenBridge.dll' ]
+
+[extension.mod_loader]
+enabled = true
+loose_params = false
+mods = []
+
+[extension.scylla_hide]
+enabled = false

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MinecraftEldenBridge selection v1",
+  "description": "UTF-8 JSON, at most 65536 bytes. Duplicate keys are forbidden. Positions are Minecraft coordinates, not Elden Ring coordinates.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "minecraft_id", "dimension", "position"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "minecraft_id": { "$ref": "#/$defs/resource_id" },
+    "dimension": { "$ref": "#/$defs/resource_id" },
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "$ref": "#/$defs/coordinate" },
+        "y": { "$ref": "#/$defs/coordinate" },
+        "z": { "$ref": "#/$defs/coordinate" }
+      }
+    }
+  },
+  "$defs": {
+    "resource_id": {
+      "type": "string",
+      "maxLength": 256,
+      "pattern": "^[a-z0-9_.-]+:[a-z0-9_./-]+$"
+    },
+    "coordinate": { "type": "number", "minimum": -1000000000, "maximum": 1000000000 }
+  }
+}
